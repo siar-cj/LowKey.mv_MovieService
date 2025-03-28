@@ -7,7 +7,7 @@
     <packaging>jar</packaging>
 
     <name>Movie Service</name>
-    <description>Backend service for managing movies</description>
+    <description>Backend service for managing movies, email confirmations, and WebSocket support</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -49,7 +49,7 @@
             <version>0.9.1</version>
         </dependency>
 
-        <!-- JavaMail API -->
+        <!-- JavaMail API for Email -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
