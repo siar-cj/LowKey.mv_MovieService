@@ -1,73 +1,52 @@
-package com.lowkey.movieservice.model;
+package com.lowkey.movieservice.service;
 
-import jakarta.persistence.*;
+import com.lowkey.movieservice.model.Movie;
+import com.lowkey.movieservice.model.MovieApiResponse;
+import com.lowkey.movieservice.repository.MovieRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-@Entity
-public class Movie {
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+@Service
+public class MovieService {
 
-    @Column(nullable = false, unique = true)
-    private String title;
+    @Autowired
+    private MovieRepository movieRepository;
 
-    @Column(nullable = false)
-    private String password;
-
-    @Column(nullable = false)
-    private String contactEmail;
-
-    private boolean confirmed;
-
-    // Constructors
-    public Movie() {}
-
-    public Movie(String title, String password, String contactEmail) {
-        this.title = title;
-        this.password = password;
-        this.contactEmail = contactEmail;
-        this.confirmed = false;
+    // Retrieve all movies as API responses
+    public List<MovieApiResponse> getAllMovies() {
+        List<Movie> movies = movieRepository.findAll(); // Fetch all movies from database
+        return movies.stream()
+                .map(movie -> new MovieApiResponse(
+                        movie.getTitle(),
+                        "A great movie", // Add actual description if available
+                        "Drama",         // Replace with movie genre if available
+                        2023             // Replace with release year if available
+                ))
+                .collect(Collectors.toList());
     }
 
-    // Getters and Setters
-    public Long getId() {
-        return id;
+    // Retrieve a specific movie by ID
+    public Optional<Movie> getMovieById(Long id) {
+        return movieRepository.findById(id); // Fetch movie by ID
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    // Add a new movie to the database
+    public Movie addMovie(Movie movie) {
+        if (movieRepository.findByTitle(movie.getTitle()) != null) {
+            throw new IllegalArgumentException("A movie with this title already exists.");
+        }
+        return movieRepository.save(movie); // Save the new movie
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getContactEmail() {
-        return contactEmail;
-    }
-
-    public void setContactEmail(String contactEmail) {
-        this.contactEmail = contactEmail;
-    }
-
-    public boolean isConfirmed() {
-        return confirmed;
-    }
-
-    public void setConfirmed(boolean confirmed) {
-        this.confirmed = confirmed;
+    // Delete a movie by ID
+    public void deleteMovie(Long id) {
+        if (!movieRepository.existsById(id)) {
+            throw new IllegalArgumentException("Movie with ID " + id + " does not exist.");
+        }
+        movieRepository.deleteById(id); // Delete the movie
     }
 }
