@@ -26,10 +26,11 @@ public class AuthController {
 
     @PostMapping("/register")
     public String registerMovie(@RequestBody Movie movie) {
-        if (movieRepository.findByTitle(movie.getTitle()) != null) {
+        if (movieRepository.findByTitle(movie.getTitle()) != null) { // Ensure findByTitle exists in MovieRepository
             throw new IllegalArgumentException("Movie is already registered.");
         }
 
+        movie.setConfirmed(false); // Ensure setConfirmed exists in Movie
         movieRepository.save(movie);
 
         ConfirmationToken token = new ConfirmationToken(
@@ -39,8 +40,7 @@ public class AuthController {
         );
         tokenRepository.save(token);
 
-        emailService.sendMovieConfirmationEmail(movie.getEmail(), token.getToken());
-
+        emailService.sendMovieConfirmationEmail(movie.getContactEmail(), token.getToken()); // Ensure getContactEmail exists
         return "Registration successful. Please check your email to confirm.";
     }
 
@@ -49,7 +49,7 @@ public class AuthController {
         ConfirmationToken confirmationToken = tokenRepository.findByToken(token);
         if (confirmationToken != null && confirmationToken.getExpiryDate().after(new Date())) {
             Movie movie = confirmationToken.getMovie();
-            movie.setConfirmed(true);
+            movie.setConfirmed(true); // Ensure setConfirmed exists
             movieRepository.save(movie);
             return "Movie confirmed successfully!";
         }

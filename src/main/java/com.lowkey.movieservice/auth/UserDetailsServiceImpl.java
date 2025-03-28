@@ -16,15 +16,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String title) throws UsernameNotFoundException {
-        Movie movie = movieRepository.findByTitle(title);
+        Movie movie = movieRepository.findByTitle(title); // Ensure findByTitle exists in MovieRepository
 
         if (movie == null) {
             throw new UsernameNotFoundException("Movie not found with title: " + title);
         }
 
         return org.springframework.security.core.userdetails.User.builder()
-                .username(movie.getTitle())
-                .password(movie.getPassword())
+                .username(movie.getTitle()) // Ensure getTitle exists in Movie
+                .password(movie.getPassword()) // Ensure getPassword exists in Movie
                 .roles("USER") // Default role
                 .build();
     }

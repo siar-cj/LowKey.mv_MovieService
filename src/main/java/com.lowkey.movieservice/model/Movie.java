@@ -1,9 +1,6 @@
 package com.lowkey.movieservice.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class Movie {
@@ -12,26 +9,25 @@ public class Movie {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String title; // Movie title
-    private String director; // Director's name
-    private String genre; // Genre of the movie (e.g., Action, Drama)
-    private String releaseDate; // Release date in YYYY-MM-DD format
-    private Double rating; // Average user rating
-    private String posterUrl; // URL for the movie poster
-    private String description; // A brief description of the movie
+    @Column(nullable = false, unique = true)
+    private String title;
+
+    @Column(nullable = false)
+    private String password;
+
+    @Column(nullable = false)
+    private String contactEmail;
+
+    private boolean confirmed;
 
     // Constructors
-    public Movie() {
-    }
+    public Movie() {}
 
-    public Movie(String title, String director, String genre, String releaseDate, Double rating, String posterUrl, String description) {
+    public Movie(String title, String password, String contactEmail) {
         this.title = title;
-        this.director = director;
-        this.genre = genre;
-        this.releaseDate = releaseDate;
-        this.rating = rating;
-        this.posterUrl = posterUrl;
-        this.description = description;
+        this.password = password;
+        this.contactEmail = contactEmail;
+        this.confirmed = false;
     }
 
     // Getters and Setters
@@ -51,51 +47,27 @@ public class Movie {
         this.title = title;
     }
 
-    public String getDirector() {
-        return director;
+    public String getPassword() {
+        return password;
     }
 
-    public void setDirector(String director) {
-        this.director = director;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public String getGenre() {
-        return genre;
+    public String getContactEmail() {
+        return contactEmail;
     }
 
-    public void setGenre(String genre) {
-        this.genre = genre;
+    public void setContactEmail(String contactEmail) {
+        this.contactEmail = contactEmail;
     }
 
-    public String getReleaseDate() {
-        return releaseDate;
+    public boolean isConfirmed() {
+        return confirmed;
     }
 
-    public void setReleaseDate(String releaseDate) {
-        this.releaseDate = releaseDate;
-    }
-
-    public Double getRating() {
-        return rating;
-    }
-
-    public void setRating(Double rating) {
-        this.rating = rating;
-    }
-
-    public String getPosterUrl() {
-        return posterUrl;
-    }
-
-    public void setPosterUrl(String posterUrl) {
-        this.posterUrl = posterUrl;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
+    public void setConfirmed(boolean confirmed) {
+        this.confirmed = confirmed;
     }
 }
